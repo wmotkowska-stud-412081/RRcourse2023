@@ -1,5 +1,5 @@
 ---
-title: "The Kardashians"
+title: "Quatro task"
 author: "Weronika Motkowksa"
 format: html
 editor: visual
@@ -11,26 +11,32 @@ editor: visual
 
 ![The Kardashians](kards.jpg)
 
-```{r, message = FALSE, warning=FALSE, comment=FALSE, }
+```{r, message = FALSE, warning=FALSE, comment=FALSE, echo = FALSE}
 library(tidyverse)
 library(dygraphs)
 library(ggplot2)
 ```
 
-```{r, messages = FALSE, warning=FALSE}
+### The popularity of *The Kardashians* on different platforms
+
+```{r, messages = FALSE, warning=FALSE, echo = FALSE}
 data.frame(metric   = c("Wikipedia visits", "Search", "IMDb popularity"),
            `number` = c("# 540", "# 1304", "# 1384"))
 ```
 
-```{r}
+### *The Kardashians* search in Google Trends
+
+```{r, echo = FALSE}
 read.csv("multiTimeline.csv", skip = 1) %>% 
     rename(date = 1, value = 2) %>% 
     mutate(date = as.Date(date)) %>% 
-    dygraph(main = "The Kardashians search in Google Trends")
+    dygraph()
 ```
 
-```{r}
-read.csv("multiTimeline.csv", skip = 1) %>% 
+### The changes in maximum search values throughout the time.
+
+```{r, echo = FALSE}
+data <- read.csv("multiTimeline.csv", skip = 1) %>% 
     rename(date = 1, value = 2) %>% 
     mutate(date = as.Date(date)) %>% 
     mutate(season = ifelse(date < "2019-03-19", "season 15", NA)) %>% 
@@ -39,8 +45,26 @@ read.csv("multiTimeline.csv", skip = 1) %>%
     mutate(season = ifelse(date >= "2020-03-26" & date < "2020-09-17", "season 18", season)) %>% 
     mutate(season = ifelse(date >= "2020-09-17" & date < "2021-03-18", "season 19", season)) %>% 
     mutate(season = ifelse(date >= "2021-03-18" & date < "2021-06-20", "season 20", season)) %>% 
-    mutate(season = ifelse(date >= "2021-06-20", "New show", season)) %>% 
+    mutate(season = ifelse(date >= "2021-06-20", "New show", season)) 
+
+data %>% 
     ggplot(aes(x = value, fill = season)) +
     geom_density() +
     theme_minimal()
 ```
+
+```{r, echo = FALSE}
+summ <- data %>% 
+    group_by(season) %>% 
+    summarise(max_value = max(value)) %>% 
+    ungroup() %>% 
+    column_to_rownames(var="season")
+
+summ
+
+ses15 <- summ["season 15", "max_value"]
+ses20 <- summ["season 20", "max_value"]
+
+```
+
+The search trend for KUWTK drops from `r ses15` to `r ses20` however for the new show it gets maximum value 100.
