@@ -13,9 +13,18 @@ editor: visual
 
 ```{r, message = FALSE, warning=FALSE, comment=FALSE, }
 library(tidyverse)
+library(dygraphs)
 ```
 
 ```{r, messages = FALSE, warning=FALSE}
 data.frame(metric   = c("Wikipedia visits", "Search", "IMDb popularity"),
            `number` = c("# 540", "# 1304", "# 1384"))
 ```
+
+```{r}
+read.csv("multiTimeline.csv", skip = 1) %>% 
+    rename(date = 1, value = 2) %>% 
+    mutate(date = as.Date(date)) %>% 
+    dygraph(main = "The Kardashians search in Google Trends")
+```
+
