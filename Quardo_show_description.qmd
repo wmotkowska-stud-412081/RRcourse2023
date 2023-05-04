@@ -8,3 +8,5 @@ editor: visual
 # *The Kardashians*
 
 *The Kardashians* is an American series which focuses on the personal lives of the Kardashian-Jenner family. The new show comes off the heels of their last show called *Keeping Up with the Kardashians*, which concluded in June 2021 after a 20-season run on E!.
+
+![The Kardashians](kards.jpg)
