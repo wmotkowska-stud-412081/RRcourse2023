@@ -14,6 +14,7 @@ editor: visual
 ```{r, message = FALSE, warning=FALSE, comment=FALSE, }
 library(tidyverse)
 library(dygraphs)
+library(ggplot2)
 ```
 
 ```{r, messages = FALSE, warning=FALSE}
@@ -28,3 +29,18 @@ read.csv("multiTimeline.csv", skip = 1) %>%
     dygraph(main = "The Kardashians search in Google Trends")
 ```
 
+```{r}
+read.csv("multiTimeline.csv", skip = 1) %>% 
+    rename(date = 1, value = 2) %>% 
+    mutate(date = as.Date(date)) %>% 
+    mutate(season = ifelse(date < "2019-03-19", "season 15", NA)) %>% 
+    mutate(season = ifelse(date >= "2019-03-19" & date < "2019-09-08", "season 16", season)) %>% 
+    mutate(season = ifelse(date >= "2019-09-08" & date < "2020-03-26", "season 17", season)) %>% 
+    mutate(season = ifelse(date >= "2020-03-26" & date < "2020-09-17", "season 18", season)) %>% 
+    mutate(season = ifelse(date >= "2020-09-17" & date < "2021-03-18", "season 19", season)) %>% 
+    mutate(season = ifelse(date >= "2021-03-18" & date < "2021-06-20", "season 20", season)) %>% 
+    mutate(season = ifelse(date >= "2021-06-20", "New show", season)) %>% 
+    ggplot(aes(x = value, fill = season)) +
+    geom_density() +
+    theme_minimal()
+```
